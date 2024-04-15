@@ -157,6 +157,7 @@ void nand_delete(nand_t *g) {
 }
 
 int nand_connect_nand(nand_t *g_out, nand_t *g_in, unsigned k) {
+
     if (!g_out || !g_in || k > g_in->size) {
         errno = EINVAL;
         return -1;
@@ -171,7 +172,6 @@ int nand_connect_nand(nand_t *g_out, nand_t *g_in, unsigned k) {
 
         output_item * old_out_iter = old_nand->gates_out->begin;
 
-
         if (old_out_iter->val == g_in && old_out_iter->port == k) {
             old_nand->gates_out->begin = old_out_iter->next;
             free(old_out_iter);
@@ -181,7 +181,6 @@ int nand_connect_nand(nand_t *g_out, nand_t *g_in, unsigned k) {
 
             while (old_out_iter && old_out_iter->next
             && (old_out_iter->next->val != g_in || old_out_iter->next->port != k))
-
                 old_out_iter = old_out_iter->next;
 
             if (old_out_iter && old_out_iter->next && old_out_iter->next->val == g_in
@@ -301,7 +300,7 @@ bool evaluate(nand_t * g, status_item** status_ptrList) {
     }
 
     g->isEvalating = false;
-    g->depth ++;
+    if (g->size > 0) g->depth ++;
 
     status_item * tmp = (status_item *) malloc(sizeof (status_item));
     if (!tmp) {
